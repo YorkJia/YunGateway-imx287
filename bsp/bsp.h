@@ -42,7 +42,7 @@ typedef struct rtu{
 	u16 start_addr;
 	u16 unit_len;
 	u16 cycle;
-	u16 *rx_buf;
+	uint_16 *rx_buf;
 } _RTU_DRIVER;
 
 
