@@ -7,31 +7,33 @@
 
 //sqlite3 *gDb = NULL;
 
+
+Port_modbus_ParaType *pPort1ModbusPara = NULL;
+
 int
 main(void)
 {
 	int cnt = 0;
 	pthread_t tid[10];
 	int i;
-	_THREAD_PARA *thread_para = NULL;
-	
-	thread_para = (_THREAD_PARA *)malloc(sizeof(_THREAD_PARA));
 
-	thread_para->dev_num = 5;
-	thread_para->rtu_data = (_RTU_DRIVER **)malloc(5*sizeof(_RTU_DRIVER *));
-
-	for(i = 0; i < 5; i++)
-		thread_para->rtu_data[i] = (_RTU_DRIVER *)malloc(sizeof(_RTU_DRIVER));
-
+	pPort1ModbusPara = (Port_modbus_ParaType *)malloc(5*sizeof(Port_modbus_ParaType));
 
 	for(i = 0; i < 5; i++){
-		 
-		thread_para->rtu_data[i]->slave_id = i + 1;
-		thread_para->rtu_data[i]->start_addr = 0;
-		thread_para->rtu_data[i]->unit_len = 10;
-		thread_para->rtu_data[i]->cycle = 2;
-		thread_para->rtu_data[i]->rx_buf = (u16 *)malloc(10*sizeof(u16));
+		pPort1ModbusPara[i].slave_id = i + 1;
+		pPort1ModbusPara[i].data_type = 3;
+		pPort1ModbusPara[i].data_para = 1;
+		pPort1ModbusPara[i].start_addr = 0;
+		pPort1ModbusPara[i].unit_len = 10;
+		pPort1ModbusPara[i].data_hold = 0;
+		pPort1ModbusPara[i].scan_cycle = 2;
+		pPort1ModbusPara[i].log = 0;
+		pPort1ModbusPara[i].repeat = 3;
+
+		pPort1ModbusPara[i].data = (u16 *)malloc(10*sizeof(u16));
 	}
+
+
 	/*
 	thread_para->index = 1;
 
@@ -64,7 +66,7 @@ main(void)
 	thread_para->repeat = 3;
 	*/
 
-	pthread_create(&tid[0], NULL, mb_rtu_master_thread, (void *)thread_para);
+	pthread_create(&tid[0], NULL, mb_rtu_master_thread, (void *)pPort1ModbusPara);
 
 	while(1){
 		cnt++;
