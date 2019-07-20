@@ -7,6 +7,10 @@
 #include <wrappthread.h>
 
 
+typedef int u16;
+typedef unsigned char u8;
+
+
 
 
 typedef struct member{
@@ -31,6 +35,22 @@ typedef struct member{
 	int log; 
 	int repeat;
 } DEV_PARA;
+
+
+typedef struct rtu{
+	u8 slave_id;
+	u16 start_addr;
+	u16 unit_len;
+	u16 cycle;
+	u16 *rx_buf;
+} _RTU_DRIVER;
+
+
+typedef struct thread_para{
+	u8 dev_num;
+	_RTU_DRIVER **rtu_data;
+} _THREAD_PARA;
+
 
 
 #endif
