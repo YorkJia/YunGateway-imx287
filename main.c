@@ -7,18 +7,31 @@
 
 //sqlite3 *gDb = NULL;
 
-
-
-
 int
 main(void)
 {
-	
-	DEV_PARA *thread_para;
-	pthread_t tid[10];
 	int cnt = 0;
-	thread_para = (DEV_PARA *)malloc(sizeof(DEV_PARA)*1);
+	pthread_t tid[10];
+	int i;
+	_THREAD_PARA *thread_para = NULL;
+	_RTU_DRIVER *pdev = NULL;
 
+
+	thread_para = (_THREAD_PARA *)malloc(sizeof(_THREAD_PARA));
+
+	thread_para->dev_num = 5;
+	thread_para->rtu_data = (_RTU_DRIVER **)malloc(5*sizeof(_RTU_DRIVER *));
+
+
+	for(i = 0; i < 5; i++){
+		pdev = thread_para->rtu_data[i];
+		pdev->slave_id = i + 1;
+		pdev->start_addr = 0;
+		pdev->unit_len = 10;
+		pdev->cycle = 2;
+		pdev->rx_buf = (u16 *)malloc(10*sizeof(u16));
+	}
+	/*
 	thread_para->index = 1;
 
     thread_para->name[0] = 'd';
@@ -48,12 +61,15 @@ main(void)
 	thread_para->scan_cycle = 3000;
 	thread_para->log = 0; 
 	thread_para->repeat = 3;
-	
+	*/
+
 	pthread_create(&tid[0], NULL, mb_rtu_master_thread, (void *)thread_para);
 
 	while(1){
 		cnt++;
-		printf("the main app running:%d\n", cnt);
+		printf("main task cnt:%d\n", cnt);
+		
+
 		sleep(5);
 	}
 	return 0;
