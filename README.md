@@ -46,3 +46,6 @@ cloud.At present, it only supports modbus rtu driver and aliyun.
 # 07162238:
 (1) add the driver folder,and mb_rtu driver thread, test well.
 (2) remote the sqlite for the test success.
+
+# 07201551:
+(1) we add the libmodbus into proj,and the libmodbus test ok.
