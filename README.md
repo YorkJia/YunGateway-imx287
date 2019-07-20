@@ -53,4 +53,10 @@ cloud.At present, it only supports modbus rtu driver and aliyun.
 # 07201921:
 (1) modify the thread para transfer mode: transfer level 1 pointer to the driver thread,
     but the pointer consist by on struct,and the struct const by level 2 pointer.
-    so,we can use one driver thread,scanning many slave device,and many section data. 
+    so,we can use one driver thread,scanning many slave device,and many section data.
+
+# 07202211:
+(1) modify the thread para transfer mode: transfer level 1 pointer,this is more simple
+	than level2 pointer. we need to know, the level 1 pointer can include lot of
+	data, becase,pointer is addr,the addr can be start addr. start addr! start addr!
+	behind the pointer, the more data the more you want. 

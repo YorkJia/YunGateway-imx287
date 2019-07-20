@@ -52,7 +52,7 @@ typedef struct thread_para{
 } _THREAD_PARA;
 
 
-typdef struct 
+typedef struct 
 {
 	int index;
     char name[32];
@@ -92,7 +92,7 @@ typedef struct
 	int log;
 	int repeat;
 
-	void *data;
+	uint16_t *data;
 }Port_modbus_ParaType;
 
 
