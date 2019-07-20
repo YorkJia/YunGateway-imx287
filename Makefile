@@ -10,10 +10,11 @@ CFLAGS = -g -O2 -Wall
 
 INC = -I./bsp -I./bsp/wraperror \
        -I./bsp/wrappthread \
-       -I./bsp/driver/mb_rtu
+       -I./bsp/driver/mb_rtu \
+       -I./lib/libmodbus
 
 #lib
-LIBS = -lpthread
+LIBS = -L./lib/libmodbus -lmodbus -lpthread
 
 #src
 SRC = main.c  bsp/wraperror/wraperror.c \
