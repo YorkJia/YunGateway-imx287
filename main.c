@@ -14,21 +14,22 @@ main(void)
 	pthread_t tid[10];
 	int i;
 	_THREAD_PARA *thread_para = NULL;
-	_RTU_DRIVER *pdev = NULL;
-
-
+	
 	thread_para = (_THREAD_PARA *)malloc(sizeof(_THREAD_PARA));
 
 	thread_para->dev_num = 5;
 	thread_para->rtu_data = (_RTU_DRIVER **)malloc(5*sizeof(_RTU_DRIVER *));
 
+	for(i = 0; i < 5; i++)
+		thread_para->rtu_data[i] = (_RTU_DRIVER *)malloc(sizeof(_RTU_DRIVER));
+
 
 	for(i = 0; i < 5; i++){
-		pdev = thread_para->rtu_data[i];
-		pdev->slave_id = i + 1;
-		pdev->start_addr = 0;
-		pdev->unit_len = 10;
-		pdev->cycle = 2;
+		 
+		thread_para->rtu_data[i]->slave_id = i + 1;
+		thread_para->rtu_data[i]->start_addr = 0;
+		thread_para->rtu_data[i]->unit_len = 10;
+		thread_para->rtu_data[i]->cycle = 2;
 		pdev->rx_buf = (u16 *)malloc(10*sizeof(u16));
 	}
 	/*
