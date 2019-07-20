@@ -46,7 +46,6 @@ void *mb_rtu_master_thread(void *arg)
 
 
 	while(1){
-		
 		for(i = 0; i < 5; i++){
 			rtu_para = pdev->rtu_data[i];
 			modbus_set_slave(ctx, rtu_para->slave_id);
