@@ -30,7 +30,7 @@ main(void)
 		thread_para->rtu_data[i]->start_addr = 0;
 		thread_para->rtu_data[i]->unit_len = 10;
 		thread_para->rtu_data[i]->cycle = 2;
-		pdev->rx_buf = (u16 *)malloc(10*sizeof(u16));
+		thread_para->rtu_data[i]->rx_buf = (u16 *)malloc(10*sizeof(u16));
 	}
 	/*
 	thread_para->index = 1;

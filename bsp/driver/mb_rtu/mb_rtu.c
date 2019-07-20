@@ -5,7 +5,6 @@
 #include <errno.h>
 #include "modbus.h"
 
-
 void *mb_rtu_master_thread(void *arg)
 {
 
@@ -33,7 +32,7 @@ void *mb_rtu_master_thread(void *arg)
 		return -1;
 	}
 
-	modbus_set_debug(ctx, pdev->slave_id);  //enable the debug info
+	modbus_set_debug(ctx, 1);  //enable the debug info
 	modbus_set_slave(ctx, 1);  //set slave id
 
 	//connect the device
@@ -50,7 +49,7 @@ void *mb_rtu_master_thread(void *arg)
 			rtu_para = pdev->rtu_data[i];
 			modbus_set_slave(ctx, rtu_para->slave_id);
 			rc = modbus_read_registers(ctx, rtu_para->start_addr,
-									rtu_para->unit_len, rtu_para->rx_buf);
+						rtu_para->unit_len, rtu_para->rx_buf);
 			if(rc == -1){
 				fprintf(stderr, "%s\n", modbus_strerror(errno));
 				modbus_close(ctx);
@@ -58,9 +57,9 @@ void *mb_rtu_master_thread(void *arg)
 				return -1;
 			}else{
 				for(j = 0; j < 10; j++)
-					printf("reg[%d] = %d(0x%x)\n", j, rtu_para->rx_buf[j], rtu_para->rx_buf[j]);
+				printf("reg[%d] = %d(0x%x)\n", j, rtu_para->rx_buf[j], rtu_para->rx_buf[j]);
 			}
-
+		}
 		sleep(2);
 	}
 

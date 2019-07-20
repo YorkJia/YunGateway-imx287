@@ -5,7 +5,7 @@
 //#include <sqlite3.h>
 //#include <wrapsqlite.h>
 #include <wrappthread.h>
-
+#include "unp.h"
 
 typedef int u16;
 typedef unsigned char u8;
@@ -42,7 +42,7 @@ typedef struct rtu{
 	u16 start_addr;
 	u16 unit_len;
 	u16 cycle;
-	uint_16 *rx_buf;
+	uint16_t *rx_buf;
 } _RTU_DRIVER;
 
 

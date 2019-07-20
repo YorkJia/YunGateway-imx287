@@ -49,3 +49,8 @@ cloud.At present, it only supports modbus rtu driver and aliyun.
 
 # 07201551:
 (1) we add the libmodbus into proj,and the libmodbus test ok.
+
+# 07201921:
+(1) modify the thread para transfer mode: transfer level 1 pointer to the driver thread,
+    but the pointer consist by on struct,and the struct const by level 2 pointer.
+    so,we can use one driver thread,scanning many slave device,and many section data. 
