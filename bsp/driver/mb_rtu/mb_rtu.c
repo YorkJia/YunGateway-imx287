@@ -8,7 +8,11 @@
 
 void *mb_rtu_master_thread(void *arg)
 {
-	uint16_t tab_reg[100] = {0};
+	uint16_t tab1_reg[100] = {0};
+	uint16_t tab2_reg[100] = {0};
+	uint16_t tab3_reg[100] = {0};
+	uint16_t tab4_reg[100] = {0};
+	uint16_t tab5_reg[100] = {0};
 	modbus_t *ctx = NULL;
 	int rc, i;
 
@@ -57,17 +61,45 @@ void *mb_rtu_master_thread(void *arg)
 
 
 	while(1){
+		//slave1
 		printf("\n---------------------------\n");
-		rc = modbus_read_registers(ctx, 0, 10, tab_reg);
+		modbus_set_slave(ctx, 1);
+		rc = modbus_read_registers(ctx, 0, 10, tab1_reg);
 		if(rc == -1){
 			fprintf(stderr, "%s\n", modbus_strerror(errno));
 			modbus_close(ctx);
 			modbus_free(ctx);
 			return -1;
 		}
-
 		for(i = 0; i < 10; i++)
-			printf("reg[%d] = %d(0x%x)\n", i, tab_reg[i], tab_reg[i]);
+			printf("slave1 reg[%d] = %d(0x%x)\n", i, tab1_reg[i], tab1_reg[i]);
+
+		//slave2
+		modbus_set_slave(ctx, 2);
+		rc = modbus_read_registers(ctx, 0, 10, tab2_reg);
+		if(rc == -1){
+			fprintf(stderr, "%s\n", modbus_strerror(errno));
+			modbus_close(ctx);
+			modbus_free(ctx);
+			return -1;
+		}
+		for(i = 0; i < 10; i++)
+			printf("slave1 reg[%d] = %d(0x%x)\n", i, tab2_reg[i], tab2_reg[i]);
+	
+		//slave3
+		modbus_set_slave(ctx, 3);
+		rc = modbus_read_registers(ctx, 0, 10, tab1_reg);
+		if(rc == -1){
+			fprintf(stderr, "%s\n", modbus_strerror(errno));
+			modbus_close(ctx);
+			modbus_free(ctx);
+			return -1;
+		}
+		for(i = 0; i < 10; i++)
+			printf("slave3 reg[%d] = %d(0x%x)\n", i, tab3_reg[i], tab3_reg[i]);
+
+
+
 
 		sleep(2);
 	}
