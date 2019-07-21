@@ -4,12 +4,15 @@
 #include <stdlib.h>
 #include <errno.h>
 #include "modbus.h"
+#include "portevent.h"
+#include "unp.h"
+
 
 void *mb_rtu_master_thread(void *arg)
 {
 
 	modbus_t *ctx = NULL;
-	int rc;
+	int rc, cnt = 0;
 	int i,j;
 
 	Port_modbus_ParaType *pdev;
@@ -31,8 +34,7 @@ void *mb_rtu_master_thread(void *arg)
 	//init the libmodbus
 	ctx = modbus_new_rtu("/dev/ttySP0", 9600, 'N', 8, 1);
 	if(ctx == NULL){
-		printf("init the libmodbus error.\n");
-		return -1;
+		err_quit("init the libmodbus error");
 	}
 
 	modbus_set_debug(ctx, 1);  //enable the debug info
@@ -43,30 +45,54 @@ void *mb_rtu_master_thread(void *arg)
 		fprintf(stderr, "connect dev failed:%s\n", modbus_strerror(errno));
 		modbus_close(ctx);
 		modbus_free(ctx);
-		return -1;
+		err_quit("libmodbus connect error");
 	}
-
-
 	while(1){
-		for(i = 0; i < 5; i++){
-			modbus_set_slave(ctx, pdev[i].slave_id);
-			rc = modbus_read_registers(ctx, pdev[i].start_addr,
-						 	 pdev[i].unit_len, pdev[i].data);
-			if(rc == -1){
-				fprintf(stderr, "%s\n", modbus_strerror(errno));
-				modbus_close(ctx);
-				modbus_free(ctx);
-				return -1;
-			}else{
-				for(j = 0; j < 10; j++)
-				printf("reg[%d] = %d(0x%x)\n", j, pdev[i].data[j], pdev[i].data[j]);
+		switch(eGetPort1ThreadState()){
+		case STOPPED:
+			printf("port1 stop read.\n");
+			
+			break;
+		case READ:
+			for(i = 0; i < 5; i++){
+				modbus_set_slave(ctx, pdev[i].slave_id);
+				rc = modbus_read_registers(ctx, pdev[i].start_addr,
+									pdev[i].unit_len, pdev[i].data);
+				if(rc == -1){
+					fprintf(stderr, "%s\n", modbus_strerror(errno));
+					modbus_close(ctx);
+					modbus_free(ctx);
+					err_quit("libmodbus read regs error");
+				}else{
+					for(j = 0; j < 10; j++)
+					printf("reg[%d] = %d(0x%x)\n", j, pdev[i].data[j], pdev[i].data[j]);
+				}
 			}
+			SetPort1ThreadState( WAIT_CNT );
+			cnt = 0;
+			break;
+		case WRITE:
+			break;
+		case WAIT_CNT:
+			cnt++;
+			if(cnt > 2){
+				cnt = 0;
+				SetPort1ThreadState( READ );
+			}
+			break;
+		case SHUTDOWN:
+			printf("shutdown .\n");
+			modbus_close(ctx);
+			modbus_free(ctx);
+			err_quit("port1 shutdown");
+			break;
 		}
-		sleep(2);
+
+		sleep(1);
 	}
 
 	modbus_close(ctx);
 	modbus_free(ctx);
 
-	return 0;
+	err_quit("port1 thread quit.");
 }

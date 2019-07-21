@@ -11,15 +11,16 @@ CFLAGS = -g -O2 -Wall
 INC = -I./bsp -I./bsp/wraperror \
        -I./bsp/wrappthread \
        -I./bsp/driver/mb_rtu \
-       -I./lib/libmodbus
-
+       -I./lib/libmodbus \
+       -I./bsp/event
 #lib
 LIBS = -L./lib/libmodbus -lmodbus -lpthread
 
 #src
 SRC = main.c  bsp/wraperror/wraperror.c \
       bsp/wrappthread/wrappthread.c \
-      bsp/driver/mb_rtu/mb_rtu.c 
+      bsp/driver/mb_rtu/mb_rtu.c \
+      bsp/event/portevent.c 
 
 #target
 TARGET = test
