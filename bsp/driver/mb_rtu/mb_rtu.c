@@ -61,7 +61,7 @@ void *mb_rtu_master_thread(void *arg)
 			for(i = 0; i < 5; i++){
 				modbus_set_slave(ctx, pread_para[i].slave_id);
 				rc = modbus_read_registers(ctx, pread_para[i].start_addr,
-									pread_para[i].unit_len, pread_para[i].data);
+									pread_para[i].unit_len, pread_para[i].rx_data);
 				if(rc == -1){
 					fprintf(stderr, "%s\n", modbus_strerror(errno));
 					modbus_close(ctx);
@@ -69,7 +69,7 @@ void *mb_rtu_master_thread(void *arg)
 					err_quit("libmodbus read regs error");
 				}else{
 					for(j = 0; j < 10; j++)
-					printf("reg[%d] = %d(0x%x)\n", j,pread_para[i].data[j], pread_para[i].data[j]);
+					printf("reg[%d] = %d(0x%x)\n", j,pread_para[i].rx_data[j], pread_para[i].rx_data[j]);
 				}
 			}
 			SetPort1ThreadState( WAIT_CNT );

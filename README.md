@@ -63,3 +63,7 @@ cloud.At present, it only supports modbus rtu driver and aliyun.
 
 # 07211638:
 (1) for our thread can both read and write,we use the event fsm,and now,the program can running ok.
+
+# 07212152:
+(1) modify the thread para transfer mode, we define a type,include void * pointer, this mode is 
+	good for driver extension,now the test can running ok.

@@ -35,7 +35,7 @@ main(void)
 		pread_para[i].scan_cycle = 2;
 		pread_para[i].log = 0;
 		pread_para[i].repeat = 3;
-		pread_para[i].data = (uint16_t *)malloc(10*sizeof(uint16_t));
+		pread_para[i].rx_data = (uint16_t *)malloc(10*sizeof(uint16_t));
 	}
 
 
