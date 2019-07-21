@@ -60,3 +60,6 @@ cloud.At present, it only supports modbus rtu driver and aliyun.
 	than level2 pointer. we need to know, the level 1 pointer can include lot of
 	data, becase,pointer is addr,the addr can be start addr. start addr! start addr!
 	behind the pointer, the more data the more you want. 
+
+# 07211638:
+(1) for our thread can both read and write,we use the event fsm,and now,the program can running ok.
