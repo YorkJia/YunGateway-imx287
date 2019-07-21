@@ -8,8 +8,8 @@
 
 //sqlite3 *gDb = NULL;
 
+DriverThreadPara_TypeDef Port1ThreadPara;
 
-Port_modbus_ParaType *pPort1ModbusPara = NULL;
 static char bDoExit;
 int
 main(void)
@@ -19,23 +19,27 @@ main(void)
 	int i;
 	char cmd;
 
-	pPort1ModbusPara = (Port_modbus_ParaType *)malloc(5*sizeof(Port_modbus_ParaType));
+	Modbus_ReadRegsTypeDef *pread_para;
+	Port1ThreadPara.read_data = (Modbus_ReadRegsTypeDef *)malloc(5*sizeof(Modbus_ReadRegsTypeDef));  //5 read para pointer
+	Port1ThreadPara.write_data = (Modbus_WriteRegsTypeDef *)malloc(sizeof(Modbus_WriteRegsTypeDef)); //1 write para pointer
 
+	pread_para = (Modbus_ReadRegsTypeDef *)Port1ThreadPara.read_data;
+	//init the read para pointer
 	for(i = 0; i < 5; i++){
-		pPort1ModbusPara[i].slave_id = i + 1;
-		pPort1ModbusPara[i].data_type = 3;
-		pPort1ModbusPara[i].data_para = 1;
-		pPort1ModbusPara[i].start_addr = 0;
-		pPort1ModbusPara[i].unit_len = 10;
-		pPort1ModbusPara[i].data_hold = 0;
-		pPort1ModbusPara[i].scan_cycle = 2;
-		pPort1ModbusPara[i].log = 0;
-		pPort1ModbusPara[i].repeat = 3;
-
-		pPort1ModbusPara[i].data = (u16 *)malloc(10*sizeof(u16));
+		pread_para[i].slave_id = i + 1;
+		pread_para[i].data_type = 3;
+		pread_para[i].data_para = 1;
+		pread_para[i].start_addr = 0;
+		pread_para[i].unit_len = 10;
+		pread_para[i].data_hold = 0;
+		pread_para[i].scan_cycle = 2;
+		pread_para[i].log = 0;
+		pread_para[i].repeat = 3;
+		pread_para[i].data = (uint16_t *)malloc(10*sizeof(uint16_t));
 	}
 
-	pthread_create(&tid[0], NULL, mb_rtu_master_thread, (void *)pPort1ModbusPara);
+
+	pthread_create(&tid[0], NULL, mb_rtu_master_thread, (void *)&Port1ThreadPara);
 
 	bDoExit = 0;
 

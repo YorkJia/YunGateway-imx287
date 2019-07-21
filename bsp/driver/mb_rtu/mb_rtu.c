@@ -15,21 +15,25 @@ void *mb_rtu_master_thread(void *arg)
 	int rc, cnt = 0;
 	int i,j;
 
-	Port_modbus_ParaType *pdev;
-	pdev = (Port_modbus_ParaType *)arg;
+	DriverThreadPara_TypeDef *pdev;
+	Modbus_ReadRegsTypeDef *pread_para;
+
+
+	pdev = (DriverThreadPara_TypeDef *)arg;
+	pread_para = (Modbus_ReadRegsTypeDef *)pdev->read_data;
 
 	Pthread_detach(pthread_self());
 	/* print the arg */
 	for(i = 0; i < 5; i++){
-		printf("pdev[%d].slave_id:%d\n", i, pdev[i].slave_id);
-		printf("pdev[%d].data_type:%d\n", i, pdev[i].data_type);
-		printf("pdev[%d].data_para:%d\n", i, pdev[i].data_para);
-		printf("pdev[%d].start_addr:%d\n", i, pdev[i].start_addr);
-		printf("pdev[%d].unit_len:%d\n", i, pdev[i].unit_len);
-		printf("pdev[%d].data_hold:%d\n", i, pdev[i].data_hold);
-		printf("pdev[%d].scan_cycle:%d\n", i, pdev[i].scan_cycle);
-		printf("pdev[%d].log:%d\n", i, pdev[i].log);
-		printf("pdev[%d].repeat:%d\n", i, pdev[i].repeat);
+		printf("pdev[%d].slave_id:%d\n", i, pread_para[i].slave_id);
+		printf("pdev[%d].data_type:%d\n", i, pread_para[i].data_type);
+		printf("pdev[%d].data_para:%d\n", i, pread_para[i].data_para);
+		printf("pdev[%d].start_addr:%d\n", i, pread_para[i].start_addr);
+		printf("pdev[%d].unit_len:%d\n", i, pread_para[i].unit_len);
+		printf("pdev[%d].data_hold:%d\n", i, pread_para[i].data_hold);
+		printf("pdev[%d].scan_cycle:%d\n", i, pread_para[i].scan_cycle);
+		printf("pdev[%d].log:%d\n", i, pread_para[i].log);
+		printf("pdev[%d].repeat:%d\n", i, pread_para[i].repeat);
 	}
 	//init the libmodbus
 	ctx = modbus_new_rtu("/dev/ttySP0", 9600, 'N', 8, 1);
@@ -55,9 +59,9 @@ void *mb_rtu_master_thread(void *arg)
 			break;
 		case READ:
 			for(i = 0; i < 5; i++){
-				modbus_set_slave(ctx, pdev[i].slave_id);
-				rc = modbus_read_registers(ctx, pdev[i].start_addr,
-									pdev[i].unit_len, pdev[i].data);
+				modbus_set_slave(ctx, pread_para[i].slave_id);
+				rc = modbus_read_registers(ctx, pread_para[i].start_addr,
+									pread_para[i].unit_len, pread_para[i].data);
 				if(rc == -1){
 					fprintf(stderr, "%s\n", modbus_strerror(errno));
 					modbus_close(ctx);
@@ -65,7 +69,7 @@ void *mb_rtu_master_thread(void *arg)
 					err_quit("libmodbus read regs error");
 				}else{
 					for(j = 0; j < 10; j++)
-					printf("reg[%d] = %d(0x%x)\n", j, pdev[i].data[j], pdev[i].data[j]);
+					printf("reg[%d] = %d(0x%x)\n", j,pread_para[i].data[j], pread_para[i].data[j]);
 				}
 			}
 			SetPort1ThreadState( WAIT_CNT );

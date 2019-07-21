@@ -97,12 +97,38 @@ typedef struct
 
 
 
+typedef struct 
+{
+	int slave_id;
+	int data_type;
+	int data_para;
+	int start_addr;
+	int unit_len;
+	int data_hold;
+	int scan_cycle;
+	int log;
+	int repeat;
+	uint16_t *rx_data;
+} Modbus_ReadRegsTypeDef;
 
 typedef struct 
 {
-	u16 type;
-	Driver_TypeDef *backend_data;
-}ThreadPara_TypeDef;
+	int slave_id;
+	int data_type;
+	int data_para;
+	int start_addr;
+	int unit_len;
+	uint16_t valid_data[128];
+} Modbus_WriteRegsTypeDef;
+
+
+
+
+typedef struct 
+{
+	void *read_data;
+	void *write_data;
+}DriverThreadPara_TypeDef;
 
 
 
