@@ -16,7 +16,7 @@ main(void)
 {
 	int cnt = 0;
 	pthread_t tid[10];
-	int i;
+	int i,j;
 	char cmd;
 
 	Modbus_ReadRegsTypeDef *pread_para;
@@ -55,7 +55,7 @@ main(void)
 	bDoExit = 0;
 
 	do{
-		printf("> ");
+		printf("please input cmd > ");
 		cmd = getchar();
 
 		switch( cmd ){

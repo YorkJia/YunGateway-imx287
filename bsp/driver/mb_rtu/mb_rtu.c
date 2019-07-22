@@ -11,13 +11,15 @@
 void *mb_rtu_master_thread(void *arg)
 {
 
-	modbus_t *ctx = NULL;
-	int rc, cnt = 0;
-	int i,j;
-
 	DriverThreadPara_TypeDef *pdev;
 	Modbus_ReadRegsTypeDef *pread_para;
 	Modbus_WriteRegsTypeDef *pwrite_para;
+	modbus_t *ctx = NULL;
+	int rc, cnt = 0;
+	int i;
+	//int j;
+	struct timeval xTimeCur,xTimeLast;
+
 
 
 	pdev = (DriverThreadPara_TypeDef *)arg;
@@ -69,13 +71,18 @@ void *mb_rtu_master_thread(void *arg)
 					modbus_close(ctx);
 					modbus_free(ctx);
 					err_quit("libmodbus read regs error");
+				
+				}
+				/*
 				}else{
 					for(j = 0; j < 10; j++)
 					printf("reg[%d] = %d(0x%x)\n", j,pread_para[i].rx_data[j], pread_para[i].rx_data[j]);
-				}
+				}*/
 			}
-			SetPort1ThreadState( WAIT_CNT );
-			cnt = 0;
+		
+			
+			if(gettimeofday(&xTimeLast, NULL) == 0)
+				SetPort1ThreadState( WAIT_CNT );
 			break;
 		case WRITE:
 			modbus_write_registers(ctx, pwrite_para->start_addr, pwrite_para->unit_len, (const uint16_t *)pwrite_para->valid_data);
@@ -83,10 +90,11 @@ void *mb_rtu_master_thread(void *arg)
 			SetPort1ThreadState( READ );
 			break;
 		case WAIT_CNT:
-			cnt++;
-			if(cnt > 2){
-				cnt = 0;
-				SetPort1ThreadState( READ );
+			if(gettimeofday(&xTimeCur, NULL) == 0){
+				if(xTimeCur.tv_sec > xTimeLast.tv_sec){
+					if(xTimeCur.tv_sec - xTimeLast.tv_sec >= 2)
+						SetPort1ThreadState( READ );
+				}
 			}
 			break;
 		case SHUTDOWN:

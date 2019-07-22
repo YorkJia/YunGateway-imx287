@@ -67,3 +67,8 @@ cloud.At present, it only supports modbus rtu driver and aliyun.
 # 07212152:
 (1) modify the thread para transfer mode, we define a type,include void * pointer, this mode is 
 	good for driver extension,now the test can running ok.
+
+# 07222227:
+(1) add the modbus write regs func, and the function is running ok.
+(2) we use the gettimeofday() get the tick of OS for count the delay time,function is ok,but the
+    write func may miss sometimes. function ok.
