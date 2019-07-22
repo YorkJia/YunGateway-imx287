@@ -80,7 +80,17 @@ main(void)
             printf( "*********** Copyright 2019 **************\n" );
 			break;
 		case 'w':
+			cnt++;
+			for(i = 0; i < 10; i++)
+				pwrite_para->valid_data[i] = 10*i + cnt;
+
 			SetPort1ThreadState( WRITE );
+			break;
+		case 'p':
+			for(i = 0; i < 5; i++){
+				for(j = 0; j < 10; j++)
+					printf("reg[%d] = %d(0x%x)\n", j,pread_para[i].rx_data[j], pread_para[i].rx_data[j]);
+			}
 			break;
 		default:
 			if( !bDoExit && (cmd != '\n'))

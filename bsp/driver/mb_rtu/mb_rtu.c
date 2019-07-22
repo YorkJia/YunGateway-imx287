@@ -43,7 +43,7 @@ void *mb_rtu_master_thread(void *arg)
 		err_quit("init the libmodbus error");
 	}
 
-	modbus_set_debug(ctx, 1);  //enable the debug info
+	modbus_set_debug(ctx, 0);  //enable the debug info
 	modbus_set_slave(ctx, 1);  //set slave id
 
 	//connect the device
