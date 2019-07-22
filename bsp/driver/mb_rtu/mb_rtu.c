@@ -17,10 +17,12 @@ void *mb_rtu_master_thread(void *arg)
 
 	DriverThreadPara_TypeDef *pdev;
 	Modbus_ReadRegsTypeDef *pread_para;
+	Modbus_WriteRegsTypeDef *pwrite_para;
 
 
 	pdev = (DriverThreadPara_TypeDef *)arg;
 	pread_para = (Modbus_ReadRegsTypeDef *)pdev->read_data;
+    pwrite_para = (Modbus_WriteRegsTypeDef *)pdev->write_data;
 
 	Pthread_detach(pthread_self());
 	/* print the arg */
@@ -54,7 +56,7 @@ void *mb_rtu_master_thread(void *arg)
 	while(1){
 		switch(eGetPort1ThreadState()){
 		case STOPPED:
-			printf("port1 stop read.\n");
+			//printf("port1 stop read.\n");
 			
 			break;
 		case READ:
@@ -76,6 +78,9 @@ void *mb_rtu_master_thread(void *arg)
 			cnt = 0;
 			break;
 		case WRITE:
+			modbus_write_registers(ctx, pwrite_para->start_addr, pwrite_para->unit_len, (const uint16_t *)pwrite_para->valid_data);
+			cnt = 0;
+			SetPort1ThreadState( READ );
 			break;
 		case WAIT_CNT:
 			cnt++;
