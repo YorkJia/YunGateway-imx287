@@ -72,3 +72,7 @@ cloud.At present, it only supports modbus rtu driver and aliyun.
 (1) add the modbus write regs func, and the function is running ok.
 (2) we use the gettimeofday() get the tick of OS for count the delay time,function is ok,but the
     write func may miss sometimes. function ok.
+
+# 07232306:
+(1) we modify the program design,use general mb_rtu driver thread, test ok,must have bug.
+(2) modify the driver thread para type.
