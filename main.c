@@ -9,6 +9,7 @@
 //sqlite3 *gDb = NULL;
 
 DriverThreadPara_TypeDef Port1ThreadPara;
+uint16_t thread2_para[20];
 
 static char bDoExit;
 int
@@ -52,6 +53,8 @@ main(void)
 
 	pthread_create(&tid[0], NULL, mb_rtu_master_thread, (void *)&Port1ThreadPara);
 
+	pthread_create(&tid[1], NULL, mb_rtu_master_thread2, (void *)thread2_para);
+
 	bDoExit = 0;
 
 	do{
@@ -91,6 +94,10 @@ main(void)
 				for(j = 0; j < 10; j++)
 					printf("reg[%d] = %d(0x%x)\n", j,pread_para[i].rx_data[j], pread_para[i].rx_data[j]);
 			}
+			break;
+		case 'b':
+			for(j = 0; j < 10; j++)
+				printf("thread2 reg[%d] = %d(0x%x)\n", j, thread2_para[j], thread2_para[j]);
 			break;
 		default:
 			if( !bDoExit && (cmd != '\n'))

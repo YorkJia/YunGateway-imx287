@@ -113,3 +113,47 @@ void *mb_rtu_master_thread(void *arg)
 
 	err_quit("port1 thread quit.");
 }
+
+
+void *mb_rtu_master_thread2(void *arg)
+{
+	modbus_t *ctx = NULL;
+	int rc;
+	uint16_t *tab_regs = (uint16_t *)arg;
+
+	Pthread_detach(pthread_self());
+	
+	//init the libmodbus
+	ctx = modbus_new_rtu("/dev/ttySP1", 9600, 'N', 8, 1);
+	if(ctx == NULL){
+		err_quit("init the port2 libmodbus error");
+	}
+
+	modbus_set_debug(ctx, 0);  //enable the debug info
+	modbus_set_slave(ctx, 1);  //set slave id
+
+	//connect the device
+	if(modbus_connect(ctx) == -1){
+		fprintf(stderr, "port 2 connect dev failed:%s\n", modbus_strerror(errno));
+		modbus_close(ctx);
+		modbus_free(ctx);
+		err_quit("port 2 libmodbus connect error");
+	}
+	while(1){
+
+			rc = modbus_read_registers(ctx, 0, 10, tab_regs);
+			if(rc == -1){
+				fprintf(stderr, "%s\n", modbus_strerror(errno));
+				modbus_close(ctx);
+				modbus_free(ctx);
+				err_quit("port2 libmodbus read regs error");	
+			}
+				
+		sleep(1);
+	}
+
+	modbus_close(ctx);
+	modbus_free(ctx);
+
+	err_quit("port2 thread quit.");
+}

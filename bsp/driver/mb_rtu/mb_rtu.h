@@ -4,6 +4,6 @@
 
 
 void *mb_rtu_master_thread(void *arg);
-
+void *mb_rtu_master_thread2(void *arg);
 
 #endif
