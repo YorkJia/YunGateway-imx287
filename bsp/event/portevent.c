@@ -59,11 +59,16 @@ ePortThreadState eGetPortThreadState( int port_id )
 	}
 }
 
-void SetPortThreadState(ePortThreadState eNewState)
+void SetPortThreadState(int port_id, ePortThreadState eNewState)
 {
-	( void )pthread_mutex_lock( &xPortLock );
-	ePortThreadState = eNewState;
-	( void )pthread_mutex_unlock( &xPortLock );
+	switch( port_id ){
+	case 1:
+		return SetPort1ThreadState(eNewState);
+		break;
+	case 2:
+		return SetPort2ThreadState(eNewState);
+		break;
+	}
 } 
 
 

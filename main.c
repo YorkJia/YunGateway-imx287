@@ -23,7 +23,7 @@ main(void)
 	int i,j;
 	char cmd;
 
-	Modbus_ReadRegsTypeDef *pread_para, pread_para2;
+	Modbus_ReadRegsTypeDef *pread_para, *pread_para2;
 	Modbus_WriteRegsTypeDef *pwrite_para;
 
 	//port1 para init
@@ -56,7 +56,7 @@ main(void)
 		pwrite_para->valid_data[i] = 10*i;
 
 	//port2 para init
-	Port2ThreadPara.port_id = 1;
+	Port2ThreadPara.port_id = 2;
 	Port2ThreadPara.dev_num = 1;
 	Port2ThreadPara.read_data = (Modbus_ReadRegsTypeDef *)malloc(sizeof(Modbus_ReadRegsTypeDef));  //5 read para pointer
 	Port2ThreadPara.write_data = (Modbus_WriteRegsTypeDef *)malloc(sizeof(Modbus_WriteRegsTypeDef)); //1 write para pointer

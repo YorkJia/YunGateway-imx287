@@ -142,7 +142,7 @@ void *mb_rtu_master_thread(void *arg)
 		case STOPPED:
 			break;
 		case READ:
-			for(i = 0; i < dev_num; i++){
+			for(i = 0; i < pdev->dev_num; i++){
 				modbus_set_slave(ctx, pread_para[i].slave_id);
 				rc = modbus_read_registers(ctx, pread_para[i].start_addr,
 									pread_para[i].unit_len, pread_para[i].rx_data);
