@@ -28,6 +28,7 @@ void *mb_rtu_master_thread(void *arg)
 
 	Pthread_detach(pthread_self());
 	/* print the arg */
+	/*
 	for(i = 0; i < 5; i++){
 		printf("pdev[%d].slave_id:%d\n", i, pread_para[i].slave_id);
 		printf("pdev[%d].data_type:%d\n", i, pread_para[i].data_type);
@@ -38,7 +39,7 @@ void *mb_rtu_master_thread(void *arg)
 		printf("pdev[%d].scan_cycle:%d\n", i, pread_para[i].scan_cycle);
 		printf("pdev[%d].log:%d\n", i, pread_para[i].log);
 		printf("pdev[%d].repeat:%d\n", i, pread_para[i].repeat);
-	}
+	}*/
 	//init the libmodbus
 	ctx = modbus_new_rtu("/dev/ttySP0", 9600, 'N', 8, 1);
 	if(ctx == NULL){
@@ -129,7 +130,7 @@ void *mb_rtu_master_thread2(void *arg)
 		err_quit("init the port2 libmodbus error");
 	}
 
-	modbus_set_debug(ctx, 0);  //enable the debug info
+	modbus_set_debug(ctx, 1);  //enable the debug info
 	modbus_set_slave(ctx, 1);  //set slave id
 
 	//connect the device
@@ -149,7 +150,7 @@ void *mb_rtu_master_thread2(void *arg)
 				err_quit("port2 libmodbus read regs error");	
 			}
 				
-		sleep(1);
+		sleep(3);
 	}
 
 	modbus_close(ctx);
