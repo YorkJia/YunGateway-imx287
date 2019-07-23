@@ -11,6 +11,5 @@ typedef enum
 } ePortThreadState;
 
 
-ePortThreadState eGetPort1ThreadState( void );
-
-void SetPort1ThreadState(ePortThreadState eNewState);
+ePortThreadState eGetPortThreadState( int port_id );
+void SetPortThreadState(int port_id, ePortThreadState eNewState);

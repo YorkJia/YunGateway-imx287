@@ -126,6 +126,8 @@ typedef struct
 
 typedef struct 
 {
+	int port_id;
+	int dev_num;
 	void *read_data;
 	void *write_data;
 }DriverThreadPara_TypeDef;

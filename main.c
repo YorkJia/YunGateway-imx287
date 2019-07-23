@@ -9,7 +9,10 @@
 //sqlite3 *gDb = NULL;
 
 DriverThreadPara_TypeDef Port1ThreadPara;
-uint16_t thread2_para[20];
+
+DriverThreadPara_TypeDef Port2ThreadPara;
+
+
 
 static char bDoExit;
 int
@@ -20,12 +23,14 @@ main(void)
 	int i,j;
 	char cmd;
 
-	Modbus_ReadRegsTypeDef *pread_para;
+	Modbus_ReadRegsTypeDef *pread_para, pread_para2;
 	Modbus_WriteRegsTypeDef *pwrite_para;
 
+	//port1 para init
+	Port1ThreadPara.port_id = 1;
+	Port1ThreadPara.dev_num = 5;
 	Port1ThreadPara.read_data = (Modbus_ReadRegsTypeDef *)malloc(5*sizeof(Modbus_ReadRegsTypeDef));  //5 read para pointer
 	Port1ThreadPara.write_data = (Modbus_WriteRegsTypeDef *)malloc(sizeof(Modbus_WriteRegsTypeDef)); //1 write para pointer
-
 	pread_para = (Modbus_ReadRegsTypeDef *)Port1ThreadPara.read_data;
 	pwrite_para = (Modbus_WriteRegsTypeDef *)Port1ThreadPara.write_data;
 	//init the read para pointer
@@ -50,10 +55,28 @@ main(void)
 	for(i = 0; i < 10; i++)
 		pwrite_para->valid_data[i] = 10*i;
 
+	//port2 para init
+	Port2ThreadPara.port_id = 1;
+	Port2ThreadPara.dev_num = 1;
+	Port2ThreadPara.read_data = (Modbus_ReadRegsTypeDef *)malloc(sizeof(Modbus_ReadRegsTypeDef));  //5 read para pointer
+	Port2ThreadPara.write_data = (Modbus_WriteRegsTypeDef *)malloc(sizeof(Modbus_WriteRegsTypeDef)); //1 write para pointer
+	pread_para2 = (Modbus_ReadRegsTypeDef *)Port2ThreadPara.read_data;
+
+	pread_para2->slave_id = 1;
+	pread_para2->data_type = 3;
+	pread_para2->data_para = 1;
+	pread_para2->start_addr = 0;
+	pread_para2->unit_len = 10;
+	pread_para2->data_hold = 0;
+	pread_para2->scan_cycle = 2;
+	pread_para2->log = 0;
+	pread_para2->repeat = 3;
+	pread_para2->rx_data = (uint16_t *)malloc(10*sizeof(uint16_t));
+
 
 	pthread_create(&tid[0], NULL, mb_rtu_master_thread, (void *)&Port1ThreadPara);
 
-	pthread_create(&tid[1], NULL, mb_rtu_master_thread2, (void *)thread2_para);
+	pthread_create(&tid[1], NULL, mb_rtu_master_thread, (void *)&Port2ThreadPara);
 
 	bDoExit = 0;
 
@@ -68,7 +91,10 @@ main(void)
 		case 'd':
 			break;
 		case 'e':
-			SetPort1ThreadState( READ );
+			SetPortThreadState(1, READ);
+			break;
+		case 't':
+			SetPortThreadState(2, READ);
 			break;
 		case 's':
 			break;
@@ -92,12 +118,12 @@ main(void)
 		case 'p':
 			for(i = 0; i < 5; i++){
 				for(j = 0; j < 10; j++)
-					printf("reg[%d] = %d(0x%x)\n", j,pread_para[i].rx_data[j], pread_para[i].rx_data[j]);
+					printf("por1 reg[%d] = %d(0x%x)\n", j,pread_para[i].rx_data[j], pread_para[i].rx_data[j]);
 			}
 			break;
 		case 'b':
 			for(j = 0; j < 10; j++)
-				printf("thread2 reg[%d] = %d(0x%x)\n", j, thread2_para[j], thread2_para[j]);
+				printf("port2 reg[%d] = %d(0x%x)\n", j, pread_para2->rx_data[j], pread_para2->rx_data[j]);
 			break;
 		default:
 			if( !bDoExit && (cmd != '\n'))
